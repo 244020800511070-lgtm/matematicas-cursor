@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Matemática y Geométrica Futurista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="cursor-glow" class="cursor-glow" aria-hidden="true"></div>
+  <canvas id="particles-canvas" class="particles-canvas" aria-hidden="true"></canvas>
+
+  <div id="app-loader" class="app-loader" role="status" aria-live="polite">
+    <div class="loader-hologram">
+      <div class="loader-ring"></div>
+      <div class="loader-ring loader-ring--delay"></div>
+      <p class="loader-text">Sincronizando núcleo cuántico…</p>
+    </div>
+  </div>
+
+  <div id="app-shell" class="app-shell app-shell--hidden">
+    <header class="hero hero--compact">
+      <div class="hero__badge">
+        <span class="hero__icon" aria-hidden="true">◈</span>
+        <span class="hero__badge-text">SISTEMA v2.0</span>
+      </div>
+      <h1 class="hero__title hologram-text">Calculadora Matemática y Geométrica</h1>
+      <p class="hero__subtitle">Escritorio modular · Ventanas independientes</p>
+    </header>
+
+    <main class="main-grid">
+      <!-- Ventana: matemáticas -->
+      <section class="win glass-card panel panel--math" aria-labelledby="math-heading">
+        <header class="win__titlebar win__titlebar--cyan">
+          <div class="win__controls" aria-hidden="true">
+            <span class="win__dot win__dot--r"></span>
+            <span class="win__dot win__dot--y"></span>
+            <span class="win__dot win__dot--g"></span>
+          </div>
+          <h2 id="math-heading" class="win__title">
+            <span class="panel__glyph" aria-hidden="true">∑</span>
+            Operaciones matemáticas
+          </h2>
+          <span class="win__meta">calc.sys</span>
+        </header>
+        <div class="win__body">
+          <p class="panel__hint">Introduce dos valores y elige una operación.</p>
+          <div class="input-row">
+            <label class="field">
+              <span class="field__label">Valor A</span>
+              <input type="number" id="math-a" class="field__input" inputmode="decimal" step="any" placeholder="0" />
+            </label>
+            <label class="field">
+              <span class="field__label">Valor B</span>
+              <input type="number" id="math-b" class="field__input" inputmode="decimal" step="any" placeholder="0" />
+            </label>
+          </div>
+          <div class="btn-grid btn-grid--ops">
+            <button type="button" class="btn btn--cyan" data-op="add">＋ Suma</button>
+            <button type="button" class="btn btn--magenta" data-op="subtract">－ Resta</button>
+            <button type="button" class="btn btn--purple" data-op="multiply">× Mult.</button>
+            <button type="button" class="btn btn--green" data-op="divide">÷ División</button>
+          </div>
+          <div id="math-error" class="alert alert--error" role="alert" hidden></div>
+          <div id="math-result" class="result-box" aria-live="polite">
+            <span class="result-box__label">Resultado</span>
+            <span id="math-result-value" class="result-box__value">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ventana: historial -->
+      <section class="win glass-card panel panel--history" aria-labelledby="history-heading">
+        <header class="win__titlebar win__titlebar--pink">
+          <div class="win__controls" aria-hidden="true">
+            <span class="win__dot win__dot--r"></span>
+            <span class="win__dot win__dot--y"></span>
+            <span class="win__dot win__dot--g"></span>
+          </div>
+          <h2 id="history-heading" class="win__title">
+            <span class="panel__glyph" aria-hidden="true">⧉</span>
+            Historial
+          </h2>
+          <span class="win__meta">log.buf</span>
+        </header>
+        <div class="win__body win__body--stack">
+          <ul id="history-list" class="history-list"></ul>
+          <button type="button" class="btn btn--ghost" id="clear-history">Limpiar historial</button>
+        </div>
+      </section>
+
+      <!-- Escritorio: geometría (ventana contenedora + ventanas internas) -->
+      <section class="geometry-section" aria-labelledby="geo-heading">
+        <div class="win glass-card geometry-win">
+          <header class="win__titlebar win__titlebar--purple">
+            <div class="win__controls" aria-hidden="true">
+              <span class="win__dot win__dot--r"></span>
+              <span class="win__dot win__dot--y"></span>
+              <span class="win__dot win__dot--g"></span>
+            </div>
+            <h2 id="geo-heading" class="win__title win__title--lg hologram-text">Figuras geométricas</h2>
+            <span class="win__meta">geo.dsk</span>
+          </header>
+          <div class="win__body geometry-win__body">
+            <div class="geometry-grid">
+              <article class="win win--nested geo-card" data-shape="circle">
+                <header class="win__titlebar win__titlebar--sub win__titlebar--cyan">
+                  <span class="geo-card__icon" aria-hidden="true">○</span>
+                  <h3 class="win__title win__title--sub">Círculo</h3>
+                </header>
+                <div class="win__body win__body--tight">
+                  <label class="field field--compact">
+                    <span class="field__label">Radio r</span>
+                    <input type="number" id="circle-r" class="field__input" min="0" step="any" inputmode="decimal" placeholder="Ej. 5" />
+                  </label>
+                  <button type="button" class="btn btn--cyan btn--block" data-calc="circle">Calcular</button>
+                  <div class="geo-card__out" data-output="circle"></div>
+                </div>
+              </article>
+
+              <article class="win win--nested geo-card" data-shape="square">
+                <header class="win__titlebar win__titlebar--sub win__titlebar--pink">
+                  <span class="geo-card__icon" aria-hidden="true">◻</span>
+                  <h3 class="win__title win__title--sub">Cuadrado</h3>
+                </header>
+                <div class="win__body win__body--tight">
+                  <label class="field field--compact">
+                    <span class="field__label">Lado l</span>
+                    <input type="number" id="square-l" class="field__input" min="0" step="any" inputmode="decimal" placeholder="Ej. 4" />
+                  </label>
+                  <button type="button" class="btn btn--magenta btn--block" data-calc="square">Calcular</button>
+                  <div class="geo-card__out" data-output="square"></div>
+                </div>
+              </article>
+
+              <article class="win win--nested geo-card" data-shape="rectangle">
+                <header class="win__titlebar win__titlebar--sub win__titlebar--purple">
+                  <span class="geo-card__icon" aria-hidden="true">▭</span>
+                  <h3 class="win__title win__title--sub">Rectángulo</h3>
+                </header>
+                <div class="win__body win__body--tight">
+                  <div class="input-row input-row--stack">
+                    <label class="field field--compact">
+                      <span class="field__label">Base b</span>
+                      <input type="number" id="rect-b" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                    <label class="field field--compact">
+                      <span class="field__label">Altura h</span>
+                      <input type="number" id="rect-h" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                  </div>
+                  <button type="button" class="btn btn--purple btn--block" data-calc="rectangle">Calcular</button>
+                  <div class="geo-card__out" data-output="rectangle"></div>
+                </div>
+              </article>
+
+              <article class="win win--nested geo-card geo-card--wide" data-shape="triangle">
+                <header class="win__titlebar win__titlebar--sub win__titlebar--green">
+                  <span class="geo-card__icon" aria-hidden="true">△</span>
+                  <h3 class="win__title win__title--sub">Triángulo</h3>
+                </header>
+                <div class="win__body win__body--tight">
+                  <p class="geo-card__note">Área: base y altura · Perímetro: tres lados</p>
+                  <div class="triangle-grid">
+                    <label class="field field--compact">
+                      <span class="field__label">Base b</span>
+                      <input type="number" id="tri-b" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                    <label class="field field--compact">
+                      <span class="field__label">Altura h</span>
+                      <input type="number" id="tri-h" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                    <label class="field field--compact">
+                      <span class="field__label">Lado a</span>
+                      <input type="number" id="tri-a" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                    <label class="field field--compact">
+                      <span class="field__label">Lado b′</span>
+                      <input type="number" id="tri-b2" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                    <label class="field field--compact">
+                      <span class="field__label">Lado c</span>
+                      <input type="number" id="tri-c" class="field__input" min="0" step="any" inputmode="decimal" />
+                    </label>
+                  </div>
+                  <button type="button" class="btn btn--green btn--block" data-calc="triangle">Calcular</button>
+                  <div class="geo-card__out" data-output="triangle"></div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <button type="button" class="btn btn--ghost btn--small" id="toggle-glass" title="Alternar intensidad glass / neón">
+        Modo visual: <span id="glass-mode-label">Neón + Glass</span>
+      </button>
+      <p class="footer__text">Calculadora Matemática y Geométrica Futurista · HTML · CSS · JS</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
